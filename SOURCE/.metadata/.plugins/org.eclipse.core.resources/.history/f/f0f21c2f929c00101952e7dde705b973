@@ -2,14 +2,13 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body for Exercise 2 (Corrected)
+  * @brief          : Main program body for Exercise 1 + Blinking LED
   ******************************************************************************
   * @attention
   *
-  * This code implements the solution for Exercise 2 from the lab manual.
-  * It uses the pin definitions from main.h for better code practice.
-  * It drives 4 seven-segment displays, showing '3' on the third and '0' on
-  * the fourth. The DOT LEDs on PA4 blink every second.
+  * This code implements the solution for Exercise 1 and also blinks the
+  * onboard red LED (PA5) every second, as shown in the tutorial PDF.
+  * Both tasks are handled by the TIM2 interrupt.
   *
   ******************************************************************************
   */
@@ -49,7 +48,6 @@ static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
-void turnOffAllLeds(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -110,6 +108,9 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -118,12 +119,14 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
@@ -138,9 +141,15 @@ void SystemClock_Config(void)
   */
 static void MX_TIM2_Init(void)
 {
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+  /* USER CODE END TIM2_Init 0 */
+
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
+  /* USER CODE BEGIN TIM2_Init 1 */
+  /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 7999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -162,6 +171,9 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  /* USER CODE BEGIN TIM2_Init 2 */
+  /* USER CODE END TIM2_Init 2 */
+
 }
 
 /**
@@ -178,93 +190,76 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  // This line correctly includes LED_RED_Pin
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|DOT_Pin|EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
-                          |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_SET);
+                          |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin DOT_Pin EN0_Pin EN1_Pin EN2_Pin EN3_Pin */
-  // THE FIX IS HERE: Add LED_RED_Pin to this line
-  GPIO_InitStruct.Pin = LED_RED_Pin|DOT_Pin|EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin;
+  /*Configure GPIO pins : DOT_Pin LED_RED_Pin EN0_Pin EN1_Pin
+                           EN2_Pin EN3_Pin */
+  GPIO_InitStruct.Pin = DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SEG0_Pin -> SEG6_Pin */
+  /*Configure GPIO pins : SEG0_Pin SEG1_Pin SEG2_Pin SEG3_Pin
+                           SEG4_Pin SEG5_Pin SEG6_Pin */
   GPIO_InitStruct.Pin = SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
                           |SEG4_Pin|SEG5_Pin|SEG6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
 
-// Counter for 7-segment display switching (50 * 10ms = 500ms)
+// Counter for 7-segment display scanning (50 * 10ms = 500ms)
 int seven_seg_counter = 0;
-// State for 7-segment display (0-3)
-int seven_seg_index = 0;
+// State for 7-segment display (0 for first, 1 for second)
+int seven_seg_state = 0;
 
-// Counter for blinking the DOT LEDs (100 * 10ms = 1000ms)
-int dot_blinky_counter = 100;
+// Counter for blinking the red LED (100 * 10ms = 1000ms)
+int blinky_counter = 100;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+  // This function is called every 10ms
   if(htim->Instance == TIM2)
   {
     // --- Logic for 7-Segment Display Scanning ---
     seven_seg_counter++;
-    if (seven_seg_counter >= 50) // 500ms has passed
+    if (seven_seg_counter >= 50)
     {
       seven_seg_counter = 0;
-      seven_seg_index++;
-      if (seven_seg_index >= 4)
-      {
-        seven_seg_index = 0;
-      }
+      seven_seg_state = !seven_seg_state;
     }
 
-    turnOffAllLeds(); // Turn off all displays before lighting the next one
-    switch(seven_seg_index)
+    if (seven_seg_state == 0)
     {
-        case 0: // Display 1: OFF
-        	HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
-        	            display7SEG(1);
-        	            break;
-        case 1: // Display 2: OFF
-        	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
-        	            display7SEG(2);
-        	            break;
-        case 2: // Display 3: Show "3"
-            HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
-            display7SEG(3);
-            break;
-        case 3: // Display 4: Show "0"
-            HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
-            display7SEG(0);
-            break;
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+      display7SEG(1);
+    }
+    else
+    {
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+      display7SEG(2);
     }
 
-    // --- Logic for Blinking DOT LEDs ---
-    dot_blinky_counter--;
-    if (dot_blinky_counter <= 0) {
-        dot_blinky_counter = 100; // Reset for another 1000ms
-        HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+    // --- Logic for Blinking Red LED ---
+    blinky_counter--;
+    if (blinky_counter <= 0) {
+        blinky_counter = 100; // Reset for another 1000ms
         HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
     }
   }
-}
-
-void turnOffAllLeds(void)
-{
-    HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 }
 
 void display7SEG(int num)
@@ -412,7 +407,7 @@ void Error_Handler(void)
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
-  * where the assert_param error has occurred.
+  *         where the assert_param error has occurred.
   * @param  file: pointer to the source file name
   * @param  line: assert_param error line source number
   * @retval None
@@ -423,3 +418,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
