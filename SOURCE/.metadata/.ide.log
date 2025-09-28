@@ -631,3 +631,41 @@
 2025-09-28 21:30:24,047 [INFO] McuFinderGlobals:52 - Set McuFinderConnectedMode to true
 2025-09-28 21:30:24,047 [INFO] ApiDb:276 - Save user favorites file C:\Users\ngkho/.stm32cubeide/favorites.mcus.txt: 0 item(s)
 2025-09-28 21:30:24,047 [INFO] ApiDb:280 - User favorites MCUs=[]
+2025-09-28 21:32:20,792 [INFO] Gpio:254 - dependency for GPIO []
+2025-09-28 21:32:28,750 [INFO] Gpio:254 - dependency for GPIO []
+2025-09-28 21:32:46,709 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,450x182,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 21:33:25,888 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 598405352 Bytes (759169024)
+2025-09-28 21:33:27,375 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 626697520 Bytes (759169024)
+2025-09-28 21:33:29,855 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 608887640 Bytes (759169024)
+2025-09-28 21:33:30,064 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: NVIC
+2025-09-28 21:33:30,064 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: SYS
+2025-09-28 21:33:30,064 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: GPIO
+2025-09-28 21:33:30,064 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: RCC
+2025-09-28 21:33:30,064 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: TIM1_8F1
+2025-09-28 21:33:30,064 [INFO] CodeGenerator:663 - code generatio: config db path: C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.3.0.202107141111\\db\
+2025-09-28 21:33:30,272 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\license.tmp_save
+2025-09-28 21:33:30,322 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\license.tmp
+2025-09-28 21:33:30,380 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\gpio.tmp_save
+2025-09-28 21:33:30,439 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\gpio.tmp
+2025-09-28 21:33:30,538 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f1xx_it.c_save
+2025-09-28 21:33:30,647 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f1xx_it.c
+2025-09-28 21:33:30,652 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f1xx_it.h_save
+2025-09-28 21:33:30,714 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f1xx_it.h
+2025-09-28 21:33:30,731 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f1xx_hal_msp.c_save
+2025-09-28 21:33:30,841 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f1xx_hal_msp.c
+2025-09-28 21:33:30,841 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\system.tmp_save
+2025-09-28 21:33:30,888 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\system.tmp
+2025-09-28 21:33:30,888 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f1xx_hal_conf.h_save
+2025-09-28 21:33:30,966 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f1xx_hal_conf.h
+2025-09-28 21:33:30,982 [WARN] IPConfigManager:3148 - IP not found : TIM
+2025-09-28 21:33:30,982 [WARN] CodeGenerator:3268 - IP not found : null
+2025-09-28 21:33:30,998 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\main.h_save
+2025-09-28 21:33:31,076 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\main.h
+2025-09-28 21:33:31,097 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\main.c_save
+2025-09-28 21:33:31,207 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\main.c
+2025-09-28 21:33:31,830 [INFO] ProjectBuilder:2578 - Time for Copy HAL[1] : 53mS.
+2025-09-28 21:33:31,843 [INFO] ProjectBuilder:3622 - Project Generator version: 3.14.1
+2025-09-28 21:33:32,248 [INFO] ConfigFileManager:1271 - The Die is : DIE412
+2025-09-28 21:33:34,099 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 2256mS.
+2025-09-28 21:33:34,099 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2025-09-28 21:33:34,115 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
