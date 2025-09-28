@@ -803,3 +803,45 @@
 2025-09-28 16:58:59,158 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 2681mS.
 2025-09-28 16:58:59,159 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 1mS.
 2025-09-28 16:58:59,160 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2025-09-28 17:09:18,738 [INFO] Gpio:254 - dependency for GPIO []
+2025-09-28 17:12:51,519 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,461x190,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:13:38,544 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:13:40,460 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:14:05,033 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,461x190,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:14:07,196 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:14:10,137 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2025-09-28 17:14:15,440 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 926747536 Bytes (1073741824)
+2025-09-28 17:14:16,372 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 945762960 Bytes (1073741824)
+2025-09-28 17:14:17,937 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 943866704 Bytes (1073741824)
+2025-09-28 17:14:18,157 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: NVIC
+2025-09-28 17:14:18,157 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: SYS
+2025-09-28 17:14:18,157 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: GPIO
+2025-09-28 17:14:18,157 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: RCC
+2025-09-28 17:14:18,157 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: TIM1_8F0
+2025-09-28 17:14:18,158 [INFO] CodeGenerator:663 - code generatio: config db path: C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.3.0.202107141111\\db\
+2025-09-28 17:14:18,415 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\license.tmp_save
+2025-09-28 17:14:18,474 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\license.tmp
+2025-09-28 17:14:18,489 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\gpio.tmp_save
+2025-09-28 17:14:18,541 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\gpio.tmp
+2025-09-28 17:14:18,677 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f0xx_it.c_save
+2025-09-28 17:14:18,756 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f0xx_it.c
+2025-09-28 17:14:18,759 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f0xx_it.h_save
+2025-09-28 17:14:18,821 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f0xx_it.h
+2025-09-28 17:14:18,835 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f0xx_hal_msp.c_save
+2025-09-28 17:14:18,930 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\stm32f0xx_hal_msp.c
+2025-09-28 17:14:18,933 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\system.tmp_save
+2025-09-28 17:14:18,975 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\MXTmpFiles\system.tmp
+2025-09-28 17:14:18,991 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f0xx_hal_conf.h_save
+2025-09-28 17:14:19,063 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\stm32f0xx_hal_conf.h
+2025-09-28 17:14:19,079 [WARN] IPConfigManager:3148 - IP not found : TIM
+2025-09-28 17:14:19,080 [WARN] CodeGenerator:3268 - IP not found : null
+2025-09-28 17:14:19,094 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\main.h_save
+2025-09-28 17:14:19,159 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Inc\main.h
+2025-09-28 17:14:19,174 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\main.c_save
+2025-09-28 17:14:19,280 [INFO] CodeEngine:257 - Generated code: C:\Users\ngkho\Documents\DecuongDH\HK251\vxl-vdk\lab(new)\GIT_LAB2\STM32LAB2\SOURCE\lab2\Core\Src\main.c
+2025-09-28 17:14:20,181 [INFO] ProjectBuilder:2578 - Time for Copy HAL[1] : 47mS.
+2025-09-28 17:14:20,184 [INFO] ProjectBuilder:3622 - Project Generator version: 3.14.1
+2025-09-28 17:14:20,486 [INFO] ConfigFileManager:1271 - The Die is : DIE444
+2025-09-28 17:14:22,199 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 2015mS.
+2025-09-28 17:14:22,200 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 1mS.
+2025-09-28 17:14:22,206 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
