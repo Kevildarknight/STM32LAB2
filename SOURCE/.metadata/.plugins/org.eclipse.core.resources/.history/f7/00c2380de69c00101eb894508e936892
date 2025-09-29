@@ -205,7 +205,8 @@ static void MX_GPIO_Init(void)
 // --- Global variables ---
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer[4] = {1, 2, 3, 4}; // Display 1, 2, 3, 4
+int led_buffer[4] = {1, 2, 3, 0}; // Display 1, 2, 3, 0
+
 // Counter for blinking LEDs (100 * 10ms = 1000ms = 1 second)
 int blinky_counter = 100;
 

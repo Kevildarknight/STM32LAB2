@@ -2,13 +2,14 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body for Exercise 3 with Blinking LEDs
+  * @brief          : Main program body for Exercise 2 (Corrected)
   ******************************************************************************
   * @attention
   *
-  * This code implements the solution for Exercise 3, using `update7SEG`
-  * and a data buffer. It also includes the blinking DOT and red LED
-  * functionality from the previous exercise.
+  * This code implements the solution for Exercise 2 from the lab manual.
+  * It uses the pin definitions from main.h for better code practice.
+  * It drives 4 seven-segment displays, showing '3' on the third and '0' on
+  * the fourth. The DOT LEDs on PA4 blink every second.
   *
   ******************************************************************************
   */
@@ -48,7 +49,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
-void update7SEG(int index);
+void turnOffAllLeds(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -141,7 +142,6 @@ static void MX_TIM2_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
   htim2.Instance = TIM2;
-  // Timer interrupt fires every 10ms for smooth scanning
   htim2.Init.Prescaler = 7999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 9;
@@ -178,6 +178,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  // This line correctly includes LED_RED_Pin
   HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|DOT_Pin|EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
@@ -185,6 +186,7 @@ static void MX_GPIO_Init(void)
                           |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : LED_RED_Pin DOT_Pin EN0_Pin EN1_Pin EN2_Pin EN3_Pin */
+  // THE FIX IS HERE: Add LED_RED_Pin to this line
   GPIO_InitStruct.Pin = LED_RED_Pin|DOT_Pin|EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -202,60 +204,76 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-// --- Global variables ---
-const int MAX_LED = 4;
-int index_led = 0;
-int led_buffer[4] = {1, 2, 3, 4}; // Display 1, 2, 3, 4
-// Counter for blinking LEDs (100 * 10ms = 1000ms = 1 second)
-int blinky_counter = 100;
+// Counter for 7-segment display switching (50 * 10ms = 500ms)
+int seven_seg_counter = 0;
+// State for 7-segment display (0-3)
+int seven_seg_index = 0;
 
-void update7SEG(int index) {
-    // Turn off all enable pins first to prevent ghosting
-    HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
-
-    switch (index) {
-        case 0:
-            display7SEG(led_buffer[0]);
-            HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
-            break;
-        case 1:
-            display7SEG(led_buffer[1]);
-            HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
-            break;
-        case 2:
-            display7SEG(led_buffer[2]);
-            HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
-            break;
-        case 3:
-            display7SEG(led_buffer[3]);
-            HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
-            break;
-    }
-}
+// Counter for blinking the DOT LEDs (100 * 10ms = 1000ms)
+int dot_blinky_counter = 100;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM2)
   {
-    // --- Task 1: 7-Segment Display Scanning (runs every 10ms) ---
-    update7SEG(index_led);
-    index_led++;
-    if (index_led >= MAX_LED) {
-        index_led = 0;
+	  // Call the update function with the current index
+	      update7SEG(index_led);
+
+	      // Increment index for the next interrupt
+	      index_led++;
+	      if (index_led >= MAX_LED) {
+	          index_led = 0; // Wrap around to the first LED
+	      }
+	    }
+    // --- Logic for 7-Segment Display Scanning ---
+//    seven_seg_counter++;
+//    if (seven_seg_counter >= 50) // 500ms has passed
+//    {
+//      seven_seg_counter = 0;
+//      seven_seg_index++;
+//      if (seven_seg_index >= 4)
+//      {
+//        seven_seg_index = 0;
+//      }
+//    }
+//
+//    turnOffAllLeds(); // Turn off all displays before lighting the next one
+//    switch(seven_seg_index)
+//    {
+//        case 0: // Display 1: OFF
+//        	HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
+//        	            display7SEG(1);
+//        	            break;
+//        case 1: // Display 2: OFF
+//        	HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+//        	            display7SEG(2);
+//        	            break;
+//        case 2: // Display 3: Show "3"
+//            HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
+//            display7SEG(3);
+//            break;
+//        case 3: // Display 4: Show "0"
+//            HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
+//            display7SEG(0);
+//            break;
     }
 
-    // --- Task 2: Blinking LEDs (runs every 1000ms) ---
-    blinky_counter--;
-    if (blinky_counter <= 0)
-    {
-        blinky_counter = 100; // Reset for the next second
+    // --- Logic for Blinking DOT LEDs ---
+    dot_blinky_counter--;
+    if (dot_blinky_counter <= 0) {
+        dot_blinky_counter = 100; // Reset for another 1000ms
         HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
         HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
     }
   }
+}
+
+void turnOffAllLeds(void)
+{
+    HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 }
 
 void display7SEG(int num)
@@ -385,7 +403,41 @@ void display7SEG(int num)
     }
 }
 /* USER CODE END 4 */
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 2, 3, 4};
+void update7SEG(int index) {
+    // First, turn off all displays to prevent ghosting
+    HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 
+    switch (index) {
+        case 0:
+            // Display the first 7SEG with the value from led_buffer[0]
+            HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
+            display7SEG(led_buffer[0]);
+            break;
+        case 1:
+            // Display the second 7SEG with the value from led_buffer[1]
+            HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+            display7SEG(led_buffer[1]);
+            break;
+        case 2:
+            // Display the third 7SEG with the value from led_buffer[2]
+            HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
+            display7SEG(led_buffer[2]);
+            break;
+        case 3:
+            // Display the fourth 7SEG with the value from led_buffer[3]
+            HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
+            display7SEG(led_buffer[3]);
+            break;
+        default:
+            break;
+    }
+}
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
@@ -404,6 +456,9 @@ void Error_Handler(void)
 /**
   * @brief  Reports the name of the source file and the source line number
   * where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
