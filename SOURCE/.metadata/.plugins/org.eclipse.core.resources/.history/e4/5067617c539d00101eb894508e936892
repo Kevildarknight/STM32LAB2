@@ -37,31 +37,24 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
-int hour = 19, minute = 35, second = 41;
+int hour = 19, minute = 35, second = 41; // Time set to current time
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 9, 3, 5};
+// --- Software Timer 0 (1-second clock tick) ---
+int timer0_counter = 0;
+int timer0_flag = 0;
 
-// LED Matrix variables
+// --- Software Timer 1 (250ms display scan) ---
+int timer1_counter = 0;
+int timer1_flag = 0;
+
+int TIMER_CYCLE = 10; // Hardware timer period is 10ms
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
-// Buffer for displaying the character 'A'
-uint8_t matrix_buffer [8] = {
-		0b00011000,
-		0b00100100,
-		0b01100110,
-		0b01000010,
-		0b01111110,
-		0b01000010,
-		0b01000010,
-		0b10000001
-};
-
-// Software Timers
-int timer0_counter = 0, timer0_flag = 0; // For 1-second clock tick
-int timer1_counter = 0, timer1_flag = 0; // For 250ms 7-seg scan
-int timer2_counter = 0, timer2_flag = 0; // For 2ms matrix scan
-int TIMER_CYCLE = 10;
+uint8_t matrix_buffer[8] = {0x18, 0x24, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x00};
+int timer2_counter = 0;
+int timer2_flag = 0;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -261,7 +254,10 @@ static void MX_GPIO_Init(void)
                           |ROW7_Pin|SEG3_Pin|SEG4_Pin|SEG5_Pin
                           |SEG6_Pin|ROW0_Pin|ROW1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA_ALL_OUTPUTS */
+  /*Configure GPIO pins : ENM0_Pin ENM1_Pin DOT_Pin LED_RED_Pin
+                           EN0_Pin EN1_Pin EN2_Pin EN3_Pin
+                           ENM2_Pin ENM3_Pin ENM4_Pin ENM5_Pin
+                           ENM6_Pin ENM7_Pin */
   GPIO_InitStruct.Pin = ENM0_Pin|ENM1_Pin|DOT_Pin|LED_RED_Pin
                           |EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin
                           |ENM2_Pin|ENM3_Pin|ENM4_Pin|ENM5_Pin
@@ -271,7 +267,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB_ALL_OUTPUTS */
+  /*Configure GPIO pins : SEG0_Pin SEG1_Pin SEG2_Pin ROW2_Pin
+                           ROW3_Pin ROW4_Pin ROW5_Pin ROW6_Pin
+                           ROW7_Pin SEG3_Pin SEG4_Pin SEG5_Pin
+                           SEG6_Pin ROW0_Pin ROW1_Pin */
   GPIO_InitStruct.Pin = SEG0_Pin|SEG1_Pin|SEG2_Pin|ROW2_Pin
                           |ROW3_Pin|ROW4_Pin|ROW5_Pin|ROW6_Pin
                           |ROW7_Pin|SEG3_Pin|SEG4_Pin|SEG5_Pin
@@ -280,6 +279,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
@@ -308,54 +308,52 @@ void timer_run(){
                 timer1_flag = 1;
             }
         }
-    if(timer2_counter > 0){
-                timer2_counter--;
-                if(timer2_counter <= 0){
-                    timer2_flag = 1;
-                }
-            }
 }
 // --- Global variables ---
-void updateLEDMatrix (int index ){
-	//ENM : COL
-	HAL_GPIO_WritePin(GPIOA,ENM0_Pin|ENM1_Pin|ENM2_Pin|ENM3_Pin|ENM4_Pin|ENM5_Pin|ENM6_Pin|ENM7_Pin, SET);
+void updateLEDMatrix(int index) {
+    // Turn off all columns first
+    HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, GPIO_PIN_SET);
 
-	HAL_GPIO_WritePin(GPIOB, ROW2_Pin|ROW3_Pin|ROW4_Pin|ROW5_Pin|ROW6_Pin|ROW7_Pin|ROW0_Pin|ROW1_Pin, SET);
+    // Write the row data for the current column
+    // Assuming ROW0-ROW7 are on GPIOB pins 8-15
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 |
+                             GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15, GPIO_PIN_SET); // Clear all row pins
+    HAL_GPIO_WritePin(GPIOB, matrix_buffer[index] << 8, GPIO_PIN_RESET); // Write new row data
 
-	uint8_t data = matrix_buffer[index];
-	for(int c = 0; c < 8; c++){
-		if(data & ( 1<<(7-c) ) ){
-			HAL_GPIO_WritePin( GPIOB, (ROW0_Pin << c), RESET );
-		}
-	}
-
-	switch ( index )
-	{
-		case 0:
-			HAL_GPIO_WritePin(GPIOA, ENM0_Pin, RESET );
-			break ;
-		case 1:
-			HAL_GPIO_WritePin(GPIOA, ENM1_Pin, RESET );
-			break ;
-		case 2:
-			HAL_GPIO_WritePin(GPIOA, ENM2_Pin, RESET );
-			break ;
-		case 3:
-			HAL_GPIO_WritePin(GPIOA, ENM3_Pin, RESET );
-			break ;
-		case 4:
-			HAL_GPIO_WritePin(GPIOA, ENM4_Pin, RESET );
-			break ;
-		case 5:
-			HAL_GPIO_WritePin(GPIOA, ENM5_Pin, RESET );
-			break ;
-		case 6:
-			HAL_GPIO_WritePin(GPIOA, ENM6_Pin, RESET );
-			break ;
-		case 7:
-			HAL_GPIO_WritePin(GPIOA, ENM7_Pin, RESET );
-			break ;
-	}
+    // Turn on the selected column by setting its enable pin LOW
+    switch (index) {
+        case 0:
+            HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, GPIO_PIN_RESET);
+            break;
+        case 1:
+            HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, GPIO_PIN_RESET);
+            break;
+        case 2:
+            HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, GPIO_PIN_RESET);
+            break;
+        case 3:
+            HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, GPIO_PIN_RESET);
+            break;
+        case 4:
+            HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, GPIO_PIN_RESET);
+            break;
+        case 5:
+            HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, GPIO_PIN_RESET);
+            break;
+        case 6:
+            HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, GPIO_PIN_RESET);
+            break;
+        case 7:
+            HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, GPIO_PIN_RESET);
+            break;
+    }
 }
 void updateClockBuffer() {
     // Update for HOUR
