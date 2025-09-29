@@ -46,7 +46,7 @@ int led_buffer[4] = {1, 9, 3, 5};
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
 // Buffer for displaying the character 'A'
-const uint8_t characterA[8] = {0x7E, 0x11, 0x11, 0x11, 0x7E, 0x11, 0x11, 0x00};
+const uint8_t characterA[8] = {0x18, 0x24, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x00};
 uint8_t matrix_buffer[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 int animation_counter = 0;
 
@@ -77,7 +77,7 @@ void timer_run(void);
 void updateLEDMatrix(int index);
 void setTimer2(int duration);
 void setTimer3(int duration);
-void shiftMatrixUp();
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
