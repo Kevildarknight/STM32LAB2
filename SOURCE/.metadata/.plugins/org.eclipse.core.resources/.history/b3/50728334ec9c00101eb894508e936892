@@ -37,12 +37,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
-int hour = 15, minute = 8, second = 50;
-const int MAX_LED = 4;
-int index_led = 0;
-int led_buffer[4] = {1, 5, 0, 8}; // Display 1, 2, 3, 4
-// Counter for blinking LEDs (100 * 10ms = 1000ms = 1 second)
-int blinky_counter = 4;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -243,6 +238,12 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 // --- Global variables ---
+int hour = 15, minute = 8, second = 50;
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 5, 0, 8}; // Display 1, 2, 3, 4
+// Counter for blinking LEDs (100 * 10ms = 1000ms = 1 second)
+int blinky_counter = 4;
 void updateClockBuffer() {
     // Update for HOUR
     led_buffer[0] = hour / 10;
