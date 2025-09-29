@@ -540,3 +540,10 @@ Finished building: lab2.bin
  
 Finished building: lab2.list
  
+09:54:35 **** Incremental Build of configuration Debug for project lab2 ****
+make -j16 all 
+arm-none-eabi-size   lab2.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8028	     24	   1648	   9700	   25e4	lab2.elf
+Finished building: default.size.stdout
+ 
