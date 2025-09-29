@@ -41,7 +41,8 @@ int hour = 15, minute = 8, second = 50;
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 5, 0, 8}; // Display 15h08m
-
+// Counter for blinking LEDs (100 * 10ms = 1000ms = 1 second)
+int blinky_counter = 4;
 // --- Software Timer variables from Exercise 6 ---
 int timer0_counter = 0;
 int timer0_flag = 0;
@@ -186,7 +187,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 7999;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9; //10ms
+  htim2.Init.Period = 249;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -300,6 +301,23 @@ void update7SEG(int index) {
             HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
             break;
     }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == TIM2)
+  {
+	  if(htim->Instance == TIM2)
+	    {
+	      timer_run(); // Run the software timer logic every 10ms
+
+	      // The 7-segment scanning also continues in the background
+	      update7SEG(index_led);
+	      index_led++;
+	      if (index_led >= MAX_LED) {
+	          index_led = 0;
+	      }
+	    }
 }
 
 void display7SEG(int num)
@@ -429,23 +447,7 @@ void display7SEG(int num)
     }
 }
 /* USER CODE END 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  if(htim->Instance == TIM2)
-  {
-	  if(htim->Instance == TIM2)
-	    {
-	      timer_run(); // Run the software timer logic every 10ms
 
-	      // The 7-segment scanning also continues in the background
-	      update7SEG(index_led);
-	      index_led++;
-	      if (index_led >= MAX_LED) {
-	          index_led = 0;
-	      }
-	    }
-}
-}
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
