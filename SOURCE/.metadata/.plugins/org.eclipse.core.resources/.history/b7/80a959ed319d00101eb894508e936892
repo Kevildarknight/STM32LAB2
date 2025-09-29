@@ -45,8 +45,6 @@ int led_buffer[4] = {1, 5, 0, 8}; // Display 15h08m
 // --- Software Timer variables from Exercise 6 ---
 int timer0_counter = 0;
 int timer0_flag = 0;
-int timer1_counter = 0;
-int timer1_flag = 0;
 int TIMER_CYCLE = 10;
 /* USER CODE BEGIN PV */
 
@@ -61,8 +59,7 @@ void display7SEG(int num);
 void update7SEG(int index);
 void updateClockBuffer();
 // Software Timer functions
-void setTimer0(int duration);
-void setTimer1(int duration);
+void setTimer(int duration);
 void timer_run(void);
 /* USER CODE END PFP */
 
@@ -77,13 +74,35 @@ void timer_run(void);
   */
 int main(void)
 {
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
   SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
+  /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  setTimer0(1000); // 1 sec clock tick
-  setTimer1(250); // 250ms display scan
+  setTimer(1000);
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
@@ -104,15 +123,7 @@ int main(void)
 	      updateClockBuffer();
 	      HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	      HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-	      setTimer0(1000);
-	  }
-	  if(timer1_flag==1){
-		  update7SEG(index_led);
-		  index_led++;
-		  if(index_led>=MAX_LED){
-			  index_led=0;
-		  }
-		  setTimer1(250); // 250ms
+	      setTimer(1000);
 	  }
     /* USER CODE BEGIN 3 */
   }
@@ -241,14 +252,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void setTimer0(int duration) {
+void setTimer(int duration) {
     timer0_counter = duration / TIMER_CYCLE;
     timer0_flag = 0;
 }
-void setTimer1(int duration) {
-    timer1_counter = duration / TIMER_CYCLE;
-    timer1_flag = 0;
-}
+
 void timer_run(){
     if(timer0_counter > 0){
         timer0_counter--;
@@ -256,12 +264,6 @@ void timer_run(){
             timer0_flag = 1;
         }
     }
-    if(timer1_counter > 0){
-            timer1_counter--;
-            if(timer1_counter <= 0){
-                timer1_flag = 1;
-            }
-        }
 }
 // --- Global variables ---
 void updateClockBuffer() {
@@ -431,7 +433,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if(htim->Instance == TIM2)
   {
-	  timer_run();
+	  if(htim->Instance == TIM2)
+	    {
+	      timer_run(); // Run the software timer logic every 10ms
+
+	      // The 7-segment scanning also continues in the background
+	      update7SEG(index_led);
+	      index_led++;
+	      if (index_led >= MAX_LED) {
+	          index_led = 0;
+	      }
+	    }
 }
 }
 /**
