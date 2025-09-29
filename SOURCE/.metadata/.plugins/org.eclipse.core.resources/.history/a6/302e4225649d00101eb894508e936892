@@ -46,7 +46,7 @@ int led_buffer[4] = {1, 9, 3, 5};
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
 // Buffer for displaying the character 'A'
-uint8_t matrix_buffer[8] = {0x18, 0x24, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x00};
+const uint8_t characterA[8] = {0x18, 0x24, 0x42, 0x42, 0x7E, 0x42, 0x42, 0x00};
 
 // Software Timers
 int timer0_counter = 0, timer0_flag = 0; // For 1-second clock tick
@@ -283,12 +283,22 @@ void timer_run(){
 }
 // --- Global variables ---
 void updateLEDMatrix(int index) {
-    // 1. Turn off all columns
-    HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin|ENM1_Pin|ENM2_Pin|ENM3_Pin|
-                                    ENM4_Pin|ENM5_Pin|ENM6_Pin|ENM7_Pin, GPIO_PIN_SET);
+    // Step 1: Turn off all column enable pins to prevent ghosting.
+    // The ULN2803 inverts the signal, but for clarity, we treat the MCU output.
+    // SET = HIGH = Column OFF.
+    HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, GPIO_PIN_SET);
 
-    // 2. Set the row data for the current column
-    uint8_t row_data = matrix_buffer[index];
+    // Step 2: Set the row data for the current column.
+    // The matrix has common anode columns, so a LOW signal on a row pin (cathode) turns the LED ON.
+    // We check each bit of the matrix_buffer byte for the current column.
+    uint8_t row_data = characterA[index];
     HAL_GPIO_WritePin(ROW0_GPIO_Port, ROW0_Pin, (row_data & 0x01) ? GPIO_PIN_RESET : GPIO_PIN_SET);
     HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, (row_data & 0x02) ? GPIO_PIN_RESET : GPIO_PIN_SET);
     HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, (row_data & 0x04) ? GPIO_PIN_RESET : GPIO_PIN_SET);
@@ -298,16 +308,33 @@ void updateLEDMatrix(int index) {
     HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, (row_data & 0x40) ? GPIO_PIN_RESET : GPIO_PIN_SET);
     HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, (row_data & 0x80) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 
-    // 3. Turn on the current column
+    // Step 3: Turn on the specific column for this index.
+    // RESET = LOW = Column ON.
     switch (index) {
-        case 0: HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, GPIO_PIN_RESET); break;
-        case 1: HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, GPIO_PIN_RESET); break;
-        case 2: HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, GPIO_PIN_RESET); break;
-        case 3: HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, GPIO_PIN_RESET); break;
-        case 4: HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, GPIO_PIN_RESET); break;
-        case 5: HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, GPIO_PIN_RESET); break;
-        case 6: HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, GPIO_PIN_RESET); break;
-        case 7: HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, GPIO_PIN_RESET); break;
+        case 0:
+            HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, GPIO_PIN_RESET);
+            break;
+        case 1:
+            HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, GPIO_PIN_RESET);
+            break;
+        case 2:
+            HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, GPIO_PIN_RESET);
+            break;
+        case 3:
+            HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, GPIO_PIN_RESET);
+            break;
+        case 4:
+            HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, GPIO_PIN_RESET);
+            break;
+        case 5:
+            HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, GPIO_PIN_RESET);
+            break;
+        case 6:
+            HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, GPIO_PIN_RESET);
+            break;
+        case 7:
+            HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, GPIO_PIN_RESET);
+            break;
     }
 }
 void updateClockBuffer() {
